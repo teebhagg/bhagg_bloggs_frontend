@@ -61,7 +61,7 @@ export default function NavBar() {
 
               {/* Tooltip */}
               <OverlayTrigger placement="bottom" overlay={renderTooltip}>
-                <Nav.Link className="p-0">
+                <Nav.Link href="/user" className="p-0">
                   <i className="bi bi-person-circle" style={{ fontSize: 35 }}></i>
                 </Nav.Link>
               </OverlayTrigger>

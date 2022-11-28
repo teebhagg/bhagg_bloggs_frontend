@@ -1,29 +1,48 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { Button, Card, Container, Form, Nav } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function LogInPage() {
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showToast, setSHowToast] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
   const navigate = useNavigate();
+  const headers = new Headers();
 
   
   const validation = (e) => {
     e.preventDefault();
     if (password.length < 6) {
       setPasswordError("Content must have a minimum of 6 characters");
+      toast.error(passwordError, {position:toast.POSITION.BOTTOM_CENTER})
     }
     if (password.length > 5) {
       logIn();
     }
   };
+
+  const checkSigninStatus = async() => {
+    const token = window.localStorage.getItem('token')
+    headers.append('Authorization', 'Bearer '+token)
+    try {
+      let response = await fetch('https://bhagg-bloggs-server.onrender.com/blogs/users/me', {headers: headers})
+      console.log('try fetch')
+      let data = await response.json()
+      navigate(-1)
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   
   const logIn = async () => {
     try {
-      let response = await fetch("/blogs/login", {
+      let response = await fetch("https://bhagg-bloggs-server.onrender.com/blogs/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,12 +51,29 @@ export default function LogInPage() {
       });
       let data = await response.json();
       console.log(data);
-      // window.localStorage.setItem('token', data.token);
-      // navigate(-1);
+      if(data.token){
+        window.localStorage.setItem('token', data.token);
+        navigate(-1);
+      }
+      if (data.error) {
+        console.log(data.error)
+        if (data.error === 'Incorrect Password') {
+          toast.error(data.error, {position:'bottom-center',});
+          setPassword('');
+        } else {
+          setPassword('');
+          setEmail('');
+          toast.error(data.error, {position:'bottom-center', });
+        }
+      }
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(()=>{
+    checkSigninStatus();
+  },[])
 
   return (
     <Container
@@ -55,6 +91,7 @@ export default function LogInPage() {
               <Form.Label>Email</Form.Label>
               <Form.Control
                 required
+                value={email}
                 type="email"
                 placeholder="Email"
                 onChange={(e) => setEmail(e.target.value)}
@@ -66,6 +103,7 @@ export default function LogInPage() {
               <Form.Label>Password</Form.Label>
               <Form.Control
                 required
+                value={password}
                 type="password"
                 placeholder="Password"
                 onChange={(e) => setPassword(e.target.value)}

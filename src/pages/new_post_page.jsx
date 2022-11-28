@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Container, Form } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'
-import 'react-quill/dist/quill.bubble.css'
+import 'react-quill/dist/quill.bubble.css';
+import 'react-quill/dist/quill.snow.css';
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { getUser } from "../redux/userReducer";
 
 export default function NewPostPage() {
   const [title, setTitle] = useState(null);
   const [content, setContent] = useState(null);
+  const [author, setAuthor] = useState(null);
+  const [email, setEmail] = useState(null);
   const [titleError, setTitleError] = useState(false);
   const [contentError, setContentError] = useState(false);
 
@@ -20,15 +22,17 @@ export default function NewPostPage() {
 
   var results;
 
+  const headers = new Headers();
+
   // Create Blogs
   const createBlog = async () => {
     try {
-      let response = await fetch("/blogs/", {
+      let response = await fetch("https://bhagg-bloggs-server.onrender.com/blogs/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({  title: title, content: content }),
+        body: JSON.stringify({  title: title, author: author, email: email, content: content }),
       });
       let data = await response.json();
       console.log(data);
@@ -69,21 +73,27 @@ export default function NewPostPage() {
 
   // Check if user is Loggedin
   const checkSigninStatus = async() => {
+    const token = window.localStorage.getItem('token')
+    headers.append('Authorization', 'Bearer '+token)
+    if (!token) {
+      navigate('/login');
+    }
     try {
-      let response = await fetch('/blogs/users/me')
+      let response = await fetch('https://bhagg-bloggs-server.onrender.com/blogs/users/me', {headers: headers})
+      console.log('try fetch')
       let data = await response.json()
       console.log(data)
-      dispatch(getUser(data))
+      setAuthor(data.name)
+      setEmail(data.email)
+      // dispatch(getUser(data))
     } catch (error) {
       console.log(error)
-      // navigate('/login')
+      navigate('/login')
     }
   }
 
   useEffect(() => {
-
-    // checkSigninStatus();
-
+    checkSigninStatus();
 
   }, []);
   return (

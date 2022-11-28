@@ -13,7 +13,7 @@ export default function FullBlogPost() {
   useEffect(() => {
     const getBlogPosts = async () => {
       try {
-        let response = await fetch(`/blogs/${params.id}`);
+        let response = await fetch(`https://bhagg-bloggs-server.onrender.com/blogs/${params.id}`);
         let data = await response.json();
         console.log(data);
         setFullPost(data)
@@ -27,7 +27,7 @@ export default function FullBlogPost() {
   return (
     <Container className="container-md py-4" style={{ maxWidth:800 }}>
       { fullPost && <h1 className="display-3 border-bottom pb-2">{fullPost.title}</h1>}
-      { fullPost && <h1 className="text-muted fst-italic py-2 h4">By Author</h1>}
+      { fullPost && <h1 className="text-muted fst-italic py-2 h4">Post By {fullPost.author}</h1>}
       { fullPost && <div className="fw-light" dangerouslySetInnerHTML={{__html: fullPost.content}} />}
     </Container>
   );

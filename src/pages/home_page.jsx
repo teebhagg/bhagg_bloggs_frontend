@@ -15,6 +15,7 @@ export default function HomePage() {
           <BlogPostCard
             key={each._id}
             id={each._id}
+            author={each.author}
             title={each.title}
             content={each.content}
           />

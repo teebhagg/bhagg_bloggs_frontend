@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { Button, Card, Container, Form, Nav } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +11,22 @@ export default function SignUpPage() {
   const [passwordError, setPasswordError] = useState(false);
 
   const navigate = useNavigate();
+  const headers = new Headers();
+
+  
+  const checkSigninStatus = async() => {
+    const token = window.localStorage.getItem('token')
+    headers.append('Authorization', 'Bearer '+token)
+    try {
+      let response = await fetch('https://bhagg-bloggs-server.onrender.com/blogs/users/me', {headers: headers})
+      console.log('try fetch')
+      let data = await response.json()
+      navigate(-1)
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const validation = (e) => {
     e.preventDefault();
@@ -24,7 +41,7 @@ export default function SignUpPage() {
 
   const signUp = async () => {
     try {
-      let response = await fetch("/blogs/register", {
+      let response = await fetch("https://bhagg-bloggs-server.onrender.com/blogs/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,6 +55,10 @@ export default function SignUpPage() {
       console.log(error);
     }
   };
+
+  useEffect(()=>{
+    checkSigninStatus();
+  },[])
 
   return (
     <Container
