@@ -1,8 +1,7 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import MySpinner from "../components/spinner";
 
 export default function FullBlogPost() {
 
@@ -25,13 +24,10 @@ export default function FullBlogPost() {
     getBlogPosts();
   }, []);
   return (
-    <Container className="container-md py-4" style={{ maxWidth:800 }}>
-      { fullPost && <h1 className="display-3 border-bottom pb-2">{fullPost.title}</h1>}
-      { fullPost && <h1 className="text-muted fst-italic py-2 h4">Post By {fullPost.author}</h1>}
-      { fullPost && <div className="fw-light" dangerouslySetInnerHTML={{__html: fullPost.content}} />}
+    fullPost === null ? <MySpinner/> : <Container className="container-md py-4" style={{ maxWidth:800 }}>
+       <h1 className="display-3 border-bottom pb-2">{fullPost.title}</h1>
+       <h1 className="text-muted fst-italic py-2 h4">Post By {fullPost.author}</h1>
+       <div className="fw-light" dangerouslySetInnerHTML={{__html: fullPost.content}} />
     </Container>
   );
 }
-
-const lorem =
-  "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Autem dicta, omnis eius nulla quod veritatis ex inventore et qui sed dolorem tempore cumque. Ab repellat dignissimos ad eveniet molestiae aspernatur dolores, officia, excepturi quam itaque, est id minima deserunt architecto sequi magni accusantium nobis illo libero alias repudiandae beatae esse.";

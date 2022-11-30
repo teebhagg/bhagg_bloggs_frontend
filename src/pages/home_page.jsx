@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import BlogPostCard from "../components/blog_post_card";
+import MySpinner from "../components/spinner";
 
 export default function HomePage() {
   const blogs = useSelector((state) => state.blogs.blogPosts);
@@ -10,7 +11,9 @@ export default function HomePage() {
   }, []);
   return (
     <Container className="my-3">
-      {blogs &&
+      {blogs == null ? (
+        <MySpinner  />
+      ) : (
         blogs.map((each) => (
           <BlogPostCard
             key={each._id}
@@ -19,7 +22,8 @@ export default function HomePage() {
             title={each.title}
             content={each.content}
           />
-        ))}
+        ))
+      )}
     </Container>
   );
 }

@@ -24,6 +24,11 @@ export default function NavBar() {
     }
   }
 
+  const logout = () => {
+    window.localStorage.removeItem('token');
+    navigate('/', {replace:'true'})
+  }
+
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       User Account
@@ -35,7 +40,7 @@ export default function NavBar() {
     window.location.pathname !== "/sign-up"
   ) {
     return (
-      <Navbar bg="light" expand="md" sticky="top">
+      <Navbar bg="light" expand="md" sticky="top" >
         <Container>
           {/* Brand Logo */}
           <Navbar.Brand href="/" className="fw-bolder">
@@ -49,13 +54,20 @@ export default function NavBar() {
           <Navbar.Collapse
             className="justify-content-end"
             id="basic-navbar-nav">
-            <Nav className="d-flex gap-3">
+            <Nav className="d-flex gap-3 align-items-end">
               <Nav.Link className="my-auto">Explore Genres</Nav.Link>
 
               {/* New Post Button */}
               {window.location.pathname !== "/new-post" ? (
-                <Nav.Link href={`/new-post`}>
+                <Nav.Link href={`/new-post`} onClick>
                   <Button>Add Post</Button>
+                </Nav.Link>
+              ) : null}
+
+              {/* Logout */}
+              {window.location.pathname === "/user" ? (
+                <Nav.Link className='text-danger my-auto' onClick={logout} >
+                  Logout
                 </Nav.Link>
               ) : null}
 

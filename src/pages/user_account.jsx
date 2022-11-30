@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import BlogPostCard from "../components/blog_post_card";
+import MySpinner from "../components/spinner";
 
 export default function UserAccount() {
   const [user, setUser] = useState(null);
@@ -48,19 +49,20 @@ export default function UserAccount() {
     checkSigninStatus();
   }, []);
   return (
-    <Container className="my-3">
-      {user && <h1 className="display-1 mx-auto text-center">{user.name}</h1>}
-      {user && <h1 className="display-6 mb-5 text-center">{user.email}</h1>}
-      {userBlogs &&
-        userBlogs.map((each) => (
+    user === null && userBlogs === null ? <MySpinner/> : <Container className="my-3">
+      <h1 className="display-1 mx-auto text-center">{user.name}</h1>
+      <h1 className="display-6 mb-5 text-center">{user.email}</h1>
+        {userBlogs && (userBlogs.length > 0 ? userBlogs.map((each) => (
           <BlogPostCard
-          key={each._id}
+            key={each._id}
             author={each.author}
             content={each.content}
             title={each.title}
             id={each._id}
           />
-        ))}
+        )): <h5 className="text-mute position-absolute top-50 start-50 translate-middle">
+        No Blog Post
+      </h5>)}
     </Container>
   );
 }

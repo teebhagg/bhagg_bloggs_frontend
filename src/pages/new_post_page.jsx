@@ -5,6 +5,7 @@ import 'react-quill/dist/quill.bubble.css';
 import 'react-quill/dist/quill.snow.css';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { getUser } from "../redux/userReducer";
 
 export default function NewPostPage() {
@@ -21,6 +22,7 @@ export default function NewPostPage() {
   const dispatch = useDispatch();
 
   var results;
+  var tabDisplay = window.innerWidth < 457;
 
   const headers = new Headers();
 
@@ -37,6 +39,7 @@ export default function NewPostPage() {
       let data = await response.json();
       console.log(data);
       results = data;
+      toast.success('Post Created', {position: toast.POSITION.BOTTOM_CENTER})
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -46,13 +49,13 @@ export default function NewPostPage() {
   // Validator
   const validation = (e) => {
     e.preventDefault();
-    if (title.length < 20) {
-      setTitleError("Title must have a minimum 20 Characters!");
+    if (title.length < 5) {
+      setTitleError("Title must have a minimum 10 Characters!");
     }
-    if (content.length < 1000) {
-      setContentError("Content must have a minimum of 1000 characters");
+    if (content.length < 100) {
+      setContentError("Content must have a minimum of 100 characters");
     }
-    if (title.length > 20 && content.length > 1000) {
+    if (title.length > 5 && content.length > 100) {
       createBlog();
     }
   };
@@ -113,7 +116,7 @@ export default function NewPostPage() {
                 placeholder="Blog Title"
                 onChange={(e) => {
                   setTitle(e.target.value);
-                  if (title.length > 20) {
+                  if (title.length > 5) {
                     setTitleError(null);
                   }
                 }}
@@ -130,7 +133,7 @@ export default function NewPostPage() {
                 <ReactQuill id="editor-container" modules={modules} placeholder="Blog Content" 
                   onChange={(e) => {
                     setContent(e);
-                    if (content.length > 1000) {
+                    if (content.length > 100) {
                       // console.log(content)
                       setContentError(null);
                     }
@@ -139,11 +142,11 @@ export default function NewPostPage() {
             </Form.Group>
 
             {contentError && (
-              <p className="text-danger fw-bold m-auto">{contentError}</p>
+              <p className="text-danger fw-bold m-auto text-center mt-5">{contentError}</p>
             )}
 
             {/* Submit Button */}
-            <Button type="submit">Publish</Button>
+            <Button style={{ marginTop: tabDisplay ? '50px' : '0px' }} type="submit">Publish</Button>
           </Form>
         </Card.Body>
       </Card>

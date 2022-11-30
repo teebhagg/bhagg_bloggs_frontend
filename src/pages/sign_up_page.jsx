@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { Button, Card, Container, Form, Nav } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function SignUpPage() {
   const [name, setName] = useState(null);
@@ -50,9 +51,21 @@ export default function SignUpPage() {
       });
       let data = await response.json();
       console.log(data);
-      navigate("-1");
+      console.log(data.error);
+      if (data.error) {
+        if (data.error.startsWith('E11000')) {
+          setEmail('');
+          setPassword('');
+          toast.error('This email already exist', {position:toast.POSITION.BOTTOM_CENTER});
+        }
+      } else {
+        console.log(data.token);
+        toast.success('User created successfully', {position:toast.POSITION.BOTTOM_CENTER})
+        window.localStorage.setItem('token', data.token);
+        navigate(-1);
+      }
     } catch (error) {
-      console.log(error);
+      console.log(error, error);
     }
   };
 
@@ -75,6 +88,7 @@ export default function SignUpPage() {
               <Form.Label>Name</Form.Label>
               <Form.Control
                 required
+                value={name}
                 type="text"
                 placeholder="Name"
                 onChange={(e) => {
@@ -88,6 +102,7 @@ export default function SignUpPage() {
               <Form.Label>Email</Form.Label>
               <Form.Control
                 required
+                value={email}
                 type="email"
                 placeholder="Email"
                 onChange={(e) => {
@@ -101,6 +116,7 @@ export default function SignUpPage() {
               <Form.Label>Password</Form.Label>
               <Form.Control
                 required
+                value={password}
                 type="password"
                 placeholder="Password"
                 onChange={(e) => {
