@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import BlogPostCard from "../components/blog_post_card";
 import MySpinner from "../components/spinner";
+import { getUser } from "../redux/userReducer";
 
 export default function UserAccount() {
   const [user, setUser] = useState(null);
@@ -11,6 +13,8 @@ export default function UserAccount() {
   const headers = new Headers();
   const params = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const profile = useSelector(state=> state.user.userDetails);
 
   const checkSigninStatus = async () => {
     const token = window.localStorage.getItem("token");
@@ -22,10 +26,11 @@ export default function UserAccount() {
       let response = await fetch("https://bhagg-bloggs-server.onrender.com/blogs/users/me", { headers: headers });
       console.log("try fetch");
       let data = await response.json();
+      dispatch(getUser(data));
       setUser(data);
-      // user && console.log(user);
       getUserBlogs(data);
-    } catch (error) {
+      console.log(profile);
+    } catch (error) { 
       console.log(error);
       navigate("/login");
     }
@@ -41,7 +46,6 @@ export default function UserAccount() {
       setUserBlogs(data);
     } catch (error) {
       console.log(error);
-      // navigate('/login')
     }
   };
 
@@ -60,7 +64,7 @@ export default function UserAccount() {
             title={each.title}
             id={each._id}
           />
-        )): <h5 className="text-mute position-absolute top-50 start-50 translate-middle">
+        )): <h5 className="text-mute pt-5 position-absolute top-50 start-50 translate-middle">
         No Blog Post
       </h5>)}
     </Container>

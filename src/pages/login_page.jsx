@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Button, Card, Container, Form, Nav } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function LogInPage() {
@@ -111,7 +111,7 @@ export default function LogInPage() {
             </Form.Group>
             <p className="d-flex gap-3 align-self-center">
               New User?{" "}
-              <Nav.Link href="/sign-up" className="text-decoration-underline">Sign Up</Nav.Link>{" "}
+              <Nav.Link as={Link} to="/sign-up" className="text-decoration-underline">Sign Up</Nav.Link>{" "}
             </p>
             <Button type="submit">Login</Button>
           </Form>

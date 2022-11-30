@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NavBar from "./components/nav_bar";
@@ -13,15 +13,17 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+  const [blogs, setBlogs] = useState(null);
   const dispatch = useDispatch();
-  const blogs = useSelector((state) => state.blogs.blogPosts);
+  // const blogs = useSelector((state) => state.blogs.blogPosts);
   useEffect(() => {
     const getBlogPosts = async () => {
       try {
         let response = await fetch("https://bhagg-bloggs-server.onrender.com/blogs");
         let data = await response.json();
         console.log(data);
-        dispatch(getBlogs(data));
+        setBlogs(data)
+        // dispatch(getBlogs(data));
         {
           blogs && console.log(blogs);
         }
@@ -36,7 +38,7 @@ function App() {
     <BrowserRouter>
       <NavBar />
       <Routes>
-        <Route index path="/" element={<HomePage />} />
+        <Route index path="/" element={<HomePage blogs={blogs} />} />
         <Route path="/new-post/" element={<NewPostPage />} />
         <Route path="/:id" element={<FullBlogPost />} />
         <Route path="/login" element={<LogInPage />} />

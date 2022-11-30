@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import BlogPostCard from "../components/blog_post_card";
 import MySpinner from "../components/spinner";
 
-export default function HomePage() {
-  const blogs = useSelector((state) => state.blogs.blogPosts);
+export default function HomePage({blogs}) {
+  // const blogs = useSelector((state) => state.blogs.blogPosts);
   useEffect(() => {
     console.log(blogs);
   }, []);

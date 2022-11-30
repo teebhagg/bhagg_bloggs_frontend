@@ -7,7 +7,7 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export default function NavBar() {
 
@@ -43,7 +43,7 @@ export default function NavBar() {
       <Navbar bg="light" expand="md" sticky="top" >
         <Container>
           {/* Brand Logo */}
-          <Navbar.Brand href="/" className="fw-bolder">
+          <Navbar.Brand as={Link} to="/" className="fw-bolder">
             Bhagg Bloggs
           </Navbar.Brand>
 
@@ -59,7 +59,7 @@ export default function NavBar() {
 
               {/* New Post Button */}
               {window.location.pathname !== "/new-post" ? (
-                <Nav.Link href={`/new-post`} onClick>
+                <Nav.Link as={Link} to={`/new-post`} onClick>
                   <Button>Add Post</Button>
                 </Nav.Link>
               ) : null}
@@ -73,7 +73,7 @@ export default function NavBar() {
 
               {/* Tooltip */}
               <OverlayTrigger placement="bottom" overlay={renderTooltip}>
-                <Nav.Link href="/user" className="p-0">
+                <Nav.Link as={Link} to="/user" className="p-0">
                   <i className="bi bi-person-circle" style={{ fontSize: 35 }}></i>
                 </Nav.Link>
               </OverlayTrigger>
