@@ -56,7 +56,6 @@ export default function LogInPage() {
       if(data.token){
         window.localStorage.setItem('token', data.token);
         navigate(-1);
-        navigate(-1);
       }
       if (data.error) {
         console.log(data.error)
