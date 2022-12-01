@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Button, Card, Container, Form, Nav } from "react-bootstrap";
+import { Button, Card, Container, Form, Nav, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -9,6 +9,7 @@ export default function LogInPage() {
   const [password, setPassword] = useState('');
   const [showToast, setSHowToast] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [loadState, setLoadState] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ export default function LogInPage() {
   
   const logIn = async () => {
     try {
+      setLoadState(true);
       let response = await fetch("https://bhagg-bloggs-server.onrender.com/blogs/login", {
         method: "POST",
         headers: {
@@ -54,16 +56,19 @@ export default function LogInPage() {
       if(data.token){
         window.localStorage.setItem('token', data.token);
         navigate(-1);
+        navigate(-1);
       }
       if (data.error) {
         console.log(data.error)
         if (data.error === 'Incorrect Password') {
           toast.error(data.error, {position:'bottom-center',});
           setPassword('');
+          setLoadState(false)
         } else {
           setPassword('');
           setEmail('');
           toast.error(data.error, {position:'bottom-center', });
+          setLoadState(false)
         }
       }
     } catch (error) {
@@ -113,7 +118,9 @@ export default function LogInPage() {
               New User?{" "}
               <Nav.Link as={Link} to="/sign-up" className="text-decoration-underline">Sign Up</Nav.Link>{" "}
             </p>
-            <Button type="submit">Login</Button>
+            <Button type="submit">
+              { loadState? <Spinner as="span" animation="border"/>: 'Login'}
+            </Button>
           </Form>
         </Card.Body>
       </Card>

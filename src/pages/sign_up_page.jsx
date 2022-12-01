@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Button, Card, Container, Form, Nav } from "react-bootstrap";
+import { Button, Card, Container, Form, Nav, Spinner } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -8,7 +8,7 @@ export default function SignUpPage() {
   const [name, setName] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  // const [emailError, setEmailError] = useState(false);
+  const [loadState, setLoadState] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
   const navigate = useNavigate();
@@ -22,6 +22,7 @@ export default function SignUpPage() {
       let response = await fetch('https://bhagg-bloggs-server.onrender.com/blogs/users/me', {headers: headers})
       console.log('try fetch')
       let data = await response.json()
+      navigate(-1)
       navigate(-1)
       console.log(data)
     } catch (error) {
@@ -41,6 +42,7 @@ export default function SignUpPage() {
   };
 
   const signUp = async () => {
+    setLoadState(true)
     try {
       let response = await fetch("https://bhagg-bloggs-server.onrender.com/blogs/register", {
         method: "POST",
@@ -58,11 +60,14 @@ export default function SignUpPage() {
           setPassword('');
           toast.error('This email already exist', {position:toast.POSITION.BOTTOM_CENTER});
         }
+        setLoadState(false);
       } else {
         console.log(data.token);
         toast.success('User created successfully', {position:toast.POSITION.BOTTOM_CENTER})
         window.localStorage.setItem('token', data.token);
         navigate(-1);
+        navigate(-1);
+        setLoadState(false);
       }
     } catch (error) {
       console.log(error, error);
@@ -137,7 +142,9 @@ export default function SignUpPage() {
                 Login
               </Nav.Link>{" "}
             </p>
-            <Button type="submit">Sign Up</Button>
+            <Button type="submit">
+              { loadState? <Spinner as="span" animation="border"/>: 'Sign Up'}
+            </Button>
           </Form>
         </Card.Body>
       </Card>
