@@ -11,6 +11,9 @@ export default function HomePage({blogs}) {
   }, []);
   return (
     <Container className="my-3">
+      <div className="m-auto pt-4 pb-1" style={{ maxWidth:'800px'}}>
+        <h2>Blog Feed</h2>
+      </div>
       {blogs == null ? (
         <MySpinner  />
       ) : (

@@ -55,7 +55,7 @@ export default function NavBar() {
             className="justify-content-end"
             id="basic-navbar-nav">
             <Nav className="d-flex gap-3 align-items-end">
-              <Nav.Link className="my-auto">Explore Genres</Nav.Link>
+              <Nav.Link as={Link} to='/explore-genres' className="my-auto">Explore Genres</Nav.Link>
 
               {/* New Post Button */}
               {window.location.pathname !== "/new-post" ? (

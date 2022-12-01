@@ -26,3 +26,12 @@ code {
 #editor-container {
   height: 300px;
 }
+
+img{
+  width: 100%;
+}
+
+i{
+  width: 200px;
+  height: 200px;
+}

@@ -11,6 +11,7 @@ import UserAccount from "./pages/user_account";
 import { getBlogs } from "./redux/blog_reducer";
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import ExploreGenres from "./pages/explore_genres";
 
 function App() {
   const [blogs, setBlogs] = useState(null);
@@ -40,6 +41,7 @@ function App() {
       <Routes>
         <Route index path="/" element={<HomePage blogs={blogs} />} />
         <Route path="/new-post/" element={<NewPostPage />} />
+        <Route path="/explore-genres/" element={<ExploreGenres />} />
         <Route path="/:id" element={<FullBlogPost />} />
         <Route path="/login" element={<LogInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
