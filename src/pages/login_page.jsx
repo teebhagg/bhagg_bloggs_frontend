@@ -55,6 +55,7 @@ export default function LogInPage() {
       console.log(data);
       if(data.token){
         window.localStorage.setItem('token', data.token);
+        toast.success('Successfully logged in', {position:toast.POSITION.BOTTOM_CENTER});
         navigate(-1);
       }
       if (data.error) {
