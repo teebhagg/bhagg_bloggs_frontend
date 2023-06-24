@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Button, Card, Container, Form, Nav, Spinner } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function SignUpPage() {
@@ -12,6 +12,7 @@ export default function SignUpPage() {
   const [passwordError, setPasswordError] = useState(false);
 
   const navigate = useNavigate();
+  const { state } = useLocation();
   const headers = new Headers();
 
   
@@ -22,8 +23,7 @@ export default function SignUpPage() {
       let response = await fetch('https://bhagg-bloggs-server.onrender.com/blogs/users/me', {headers: headers})
       console.log('try fetch')
       let data = await response.json()
-      navigate(-1)
-      navigate(-1)
+      navigate(state, {replace: true})
       console.log(data)
     } catch (error) {
       console.log(error)
@@ -34,10 +34,10 @@ export default function SignUpPage() {
     e.preventDefault();
     if (password.length < 6) {
       setPasswordError("password must have a minimum of 6 characters");
+      return;
     }
-    if (password.length > 6) {
-    }
-    console.log(name, email, password);
+    // if (password.length > 6) {
+    // }
     signUp();
   };
 
@@ -65,14 +65,17 @@ export default function SignUpPage() {
         console.log(data.token);
         toast.success('User created successfully', {position:toast.POSITION.BOTTOM_CENTER})
         window.localStorage.setItem('token', data.token);
-        navigate(-1);
-        navigate(-1);
+        navigate(state, {replace: true})
         setLoadState(false);
       }
     } catch (error) {
       console.log(error, error);
     }
   };
+
+  const navToSignIn = () => {
+    navigate("/login", {replace: true, state: state})
+  }
 
   useEffect(()=>{
     checkSigninStatus();
@@ -90,7 +93,7 @@ export default function SignUpPage() {
           <Form className="d-flex flex-column gap-4" onSubmit={validation}>
             {/* Name Field */}
             <Form.Group>
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Full Name</Form.Label>
               <Form.Control
                 required
                 value={name}
@@ -138,9 +141,7 @@ export default function SignUpPage() {
             </Form.Group>
             <p className="d-flex gap-3 align-self-center">
               Already have an account?{" "}
-              <Nav.Link as={Link} to="/login" className="text-decoration-underline">
-                Login
-              </Nav.Link>{" "}
+              <p onClick={navToSignIn} style={{ cursor:'pointer' }} className="text-decoration-underline">Log In</p>
             </p>
             <Button type="submit">
               { loadState? <Spinner as="span" animation="border"/>: 'Sign Up'}

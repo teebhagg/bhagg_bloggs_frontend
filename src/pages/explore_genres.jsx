@@ -10,7 +10,7 @@ export default function ExploreGenres() {
           transition={{ repeat: Infinity, duration: 1.5 }}>
           <i
             className="bi bi-gear-wide-connected"
-            style={{ fontSize: "100px" }}
+            style={{ fontSize: "50px" }}
           />
         </motion.div>
       </div>

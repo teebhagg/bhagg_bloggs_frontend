@@ -1,21 +1,27 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Container, Spinner } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import BlogPostCard from "../components/blog_post_card";
-import MySpinner from "../components/spinner";
+import CardSkeleton from "../components/card_skeleton";
 
-export default function HomePage({blogs}) {
+export default function HomePage({ blogs, isLoading, moreData }) {
   // const blogs = useSelector((state) => state.blogs.blogPosts);
-  useEffect(() => {
-    console.log(blogs);
-  }, []);
+  // useEffect(() => {
+  //   console.log(blogs);
+  // }, [blogs]);
   return (
-    <Container className="my-3">
-      <div className="m-auto pt-4 pb-1" style={{ maxWidth:'800px'}}>
+    <Container id="scroll-container" className="mt-3 mb-5">
+      <div className="m-auto pt-4 pb-1" style={{ maxWidth: "800px" }}>
         <h2>Blog Feed</h2>
       </div>
-      {blogs == null ? (
-        <MySpinner  />
+      {blogs.length < 1 ? (
+        <div>
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
       ) : (
         blogs.map((each) => (
           <BlogPostCard
@@ -27,6 +33,11 @@ export default function HomePage({blogs}) {
           />
         ))
       )}
+      {blogs.length > 1 && isLoading && moreData ? (
+        <div className="mx-auto d-flex justify-content-center" style={{ maxWidth: "800px" }} >
+          <Spinner className="mx-auto my-4" animation="grow" />
+        </div>
+      ) : null}
     </Container>
   );
 }

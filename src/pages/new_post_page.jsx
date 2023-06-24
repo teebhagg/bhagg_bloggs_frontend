@@ -79,7 +79,7 @@ export default function NewPostPage() {
     const token = window.localStorage.getItem('token')
     headers.append('Authorization', 'Bearer '+token)
     if (!token) {
-      navigate('/login');
+      navigate('/login', { replace: true ,state: '/new-post'});
     }
     try {
       let response = await fetch('https://bhagg-bloggs-server.onrender.com/blogs/users/me', {headers: headers})
@@ -91,7 +91,7 @@ export default function NewPostPage() {
       // dispatch(getUser(data))
     } catch (error) {
       console.log(error)
-      navigate('/login')
+      navigate('/login', { replace: true ,state: '/new-post'});
     }
   }
 

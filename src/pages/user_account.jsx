@@ -20,29 +20,25 @@ export default function UserAccount() {
     const token = window.localStorage.getItem("token");
     headers.append("Authorization", "Bearer " + token);
     if (!token) {
-      navigate("/login");
+      navigate("/login", {replace: true, state:'/user'});
     }
     try {
       let response = await fetch("https://bhagg-bloggs-server.onrender.com/blogs/users/me", { headers: headers });
-      console.log("try fetch");
       let data = await response.json();
       dispatch(getUser(data));
       setUser(data);
       getUserBlogs(data);
-      console.log(profile);
     } catch (error) { 
       console.log(error);
-      navigate("/login");
+      navigate("/login", {replace: true, state:'/user'});
     }
   };
 
   const getUserBlogs = async (info) => {
-    console.log(info);
     try {
       let response = await fetch(`https://bhagg-bloggs-server.onrender.com/blogs/users/blogs/${info.email}`);
       console.log("try fetch");
       let data = await response.json();
-      console.log(data);
       setUserBlogs(data);
     } catch (error) {
       console.log(error);

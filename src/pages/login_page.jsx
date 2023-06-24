@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Button, Card, Container, Form, Nav, Spinner } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function LogInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showToast, setSHowToast] = useState(false);
-  const [emailError, setEmailError] = useState(false);
+  // const [showToast, setSHowToast] = useState(false);
+  // const [emailError, setEmailError] = useState(false);
   const [loadState, setLoadState] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
   const navigate = useNavigate();
+  const { state } = useLocation();
   const headers = new Headers();
 
   
@@ -32,9 +33,8 @@ export default function LogInPage() {
     headers.append('Authorization', 'Bearer '+token)
     try {
       let response = await fetch('https://bhagg-bloggs-server.onrender.com/blogs/users/me', {headers: headers})
-      console.log('try fetch')
       let data = await response.json()
-      navigate(-1)
+      navigate(state, {replace:true})
       console.log(data)
     } catch (error) {
       console.log(error)
@@ -56,8 +56,7 @@ export default function LogInPage() {
       if(data.token){
         window.localStorage.setItem('token', data.token);
         toast.success('Successfully logged in', {position:toast.POSITION.BOTTOM_CENTER});
-        navigate(-1);
-        navigate(-1);
+        navigate(state, {replace:true});
       }
       if (data.error) {
         console.log(data.error)
@@ -76,6 +75,10 @@ export default function LogInPage() {
       console.log(error);
     }
   };
+
+  const navToSignUp = () => {
+    navigate("/sign-up", {replace: true, state: state})
+  }
 
   useEffect(()=>{
     checkSigninStatus();
@@ -117,7 +120,7 @@ export default function LogInPage() {
             </Form.Group>
             <p className="d-flex gap-3 align-self-center">
               New User?{" "}
-              <Nav.Link as={Link} to="/sign-up" className="text-decoration-underline">Sign Up</Nav.Link>{" "}
+              <p onClick={navToSignUp} style={{ cursor:'pointer' }} className="text-decoration-underline">Sign Up</p>
             </p>
             <Button type="submit">
               { loadState? <Spinner as="span" animation="border"/>: 'Login'}
